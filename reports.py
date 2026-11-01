@@ -42,11 +42,11 @@ def history(db, limit, cursor=None):
     query = "SELECT id, report, scheduled_at FROM deliveries"
     params = []
     if cursor is not None:
-        query += " WHERE id < ?"
+        query += " WHERE scheduled_at < ?"
         params.append(cursor)
-    query += " ORDER BY id DESC LIMIT ?"
+    query += " ORDER BY scheduled_at DESC, id DESC LIMIT ?"
     rows = db.execute(query, (*params, limit + 1)).fetchall()
-    next_cursor = rows[limit - 1][0] if len(rows) > limit else None
+    next_cursor = rows[limit - 1][2] if len(rows) > limit else None
     return HistoryPage(rows[:limit], next_cursor)
 
 
