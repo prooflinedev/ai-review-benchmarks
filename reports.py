@@ -6,7 +6,7 @@ from itertools import islice
 from pathlib import Path
 
 
-DELIVERY_QUEUE = "reports"
+DELIVERY_QUEUE = "report-dispatch"
 EXPORT_BATCH_SIZE = 25
 
 
