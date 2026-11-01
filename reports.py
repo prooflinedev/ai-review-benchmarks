@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 DELIVERY_QUEUE = "reports"
-EXPORT_BATCH_SIZE = 25
+EXPORT_BATCH_SIZE = 50
 
 
 def migrate(db):
