@@ -83,4 +83,4 @@ def summary(db):
     sent, waiting = db.execute(
         "SELECT count(delivered_at), count(*) - count(delivered_at) FROM deliveries"
     ).fetchone()
-    return {"delivered": sent, "pending": waiting}
+    return {"delivered": sent, "pending": waiting, "total": sent + waiting}
