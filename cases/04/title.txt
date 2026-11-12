@@ -1,0 +1,1 @@
+Retire the legacy delivery column

@@ -1,0 +1,13 @@
+diff --git reports.py reports.py
+index 7cd951c..43e70d8 100644
+--- reports.py
++++ reports.py
+@@ -7,7 +7,7 @@ from pathlib import Path
+ 
+ 
+ DELIVERY_QUEUE = "reports"
+-EXPORT_BATCH_SIZE = 25
++EXPORT_BATCH_SIZE = 50
+ 
+ 
+ def migrate(db):

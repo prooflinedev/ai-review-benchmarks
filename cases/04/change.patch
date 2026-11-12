@@ -1,0 +1,7 @@
+diff --git migrations/002_retire_format.sql migrations/002_retire_format.sql
+new file mode 100644
+index 0000000..05e5c5a
+--- /dev/null
++++ migrations/002_retire_format.sql
+@@ -0,0 +1 @@
++ALTER TABLE deliveries DROP COLUMN legacy_format;
