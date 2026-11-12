@@ -1,6 +1,5 @@
 """Report scheduling, delivery, and export for the operations console."""
 
-import csv
 from dataclasses import dataclass
 from itertools import islice
 from pathlib import Path
@@ -51,11 +50,10 @@ def history(db, limit, cursor=None):
 
 
 def write_export(db, output):
-    writer = csv.writer(output)
-    writer.writerow(["id", "report", "scheduled_at"])
-    rows = db.execute("SELECT id, report, scheduled_at FROM deliveries ORDER BY id").fetchall()
+    output.write("id,report,scheduled_at\n")
+    rows = db.execute("SELECT id, report, scheduled_at FROM deliveries ORDER BY id")
     for row in rows:
-        writer.writerow(row)
+        output.write(",".join(map(str, row)) + "\n")
 
 
 def export_to_sink(db, send):
