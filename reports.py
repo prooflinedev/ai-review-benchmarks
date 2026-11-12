@@ -73,10 +73,20 @@ def deliver_due(db, queue, now):
             "AND scheduled_at <= ? ORDER BY scheduled_at, id",
             (queue, now),
         ).fetchall()
-        for (job_id,) in jobs:
-            db.execute("INSERT INTO receipts VALUES (?, ?)", (job_id, now))
-            db.execute("UPDATE deliveries SET delivered_at = ? WHERE id = ?", (now, job_id))
-    return len(jobs)
+        processed = 0
+        batch_size = 20
+        for start in range(0, len(jobs) - batch_size + 1, batch_size):
+            batch = jobs[start:start + batch_size]
+            db.executemany(
+                "INSERT INTO receipts VALUES (?, ?)",
+                ((job_id, now) for (job_id,) in batch),
+            )
+            db.executemany(
+                "UPDATE deliveries SET delivered_at = ? WHERE id = ?",
+                ((now, job_id) for (job_id,) in batch),
+            )
+            processed += len(batch)
+    return processed
 
 
 def summary(db):
