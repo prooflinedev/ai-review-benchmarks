@@ -1,0 +1,13 @@
+# Designing the comparison
+
+An engineer reading your results should be able to answer two questions. Did these tools review the same change with the same information? Could I add a reviewer tomorrow and get a comparable result? The format and implementation are yours.
+
+**Define the unit of observation.** One attempt has a provider, a case, a base and head commit, a context condition, and a run identifier. Record the trigger, plan or model when visible, settings, timestamps, terminal outcome, and original review. Show which attempts came from retries. For example, a second delivery of the same GitHub webhook should leave you with one attempt. An intentional second review should be identifiable as a repeat.
+
+**Keep answers out of the review.** A copy of the challenge includes the case catalog. Once you add expected findings or results, any reviewer installed there can read those too. The app-only branches documented in the case guide give you a clean starting point. Decide who can see your calibration notes, CI failures, earlier PR comments and other repositories. Turn off shared learning or indexing where available and document any uncertainty. To probe familiarity with the provided cases, try an original, held-out change after freezing the rules. [App-only branches](../cases/README.md)
+
+**Control the deployment information.** For a code-only review, a reviewer can reasonably identify a failure that depends on how the app is deployed. For a review with a snapshot, ask whether the reviewer can identify the affected deployment and cite the evidence. Give every provider the same snapshot in that comparison. The live AWS starter exercises one report workload. The two-site records in cases 04–06 are synthetic inputs. Label the source of each fact in your report.
+
+**Score claims you can check.** Decide how to treat correct findings, duplicates, unsupported warnings, missed defects, and valid findings you didn’t anticipate. A quiet review can be a good outcome on a correct change. A tool that never finished provides a different observation. Keep the raw comment and a reason for the score. Where practical, grade the claims with the provider names hidden and have a second reader check ambiguous calls.
+
+**Make breadth visible.** Use one row per distinct reviewer and one column per case for each context condition. Show which providers actually ran, which need an installation or manual trigger, and which ran out of quota. Start additional providers on the same batch so partial runs still overlap. Report raw counts alongside rates and name the cases shared by each comparison. Eight related changes in one application give limited evidence about performance elsewhere, even when many providers review them.

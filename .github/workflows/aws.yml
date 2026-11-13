@@ -1,0 +1,50 @@
+name: AWS sample deployment
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Deploy and verify the checked-out commit, or delete the stack
+        type: choice
+        required: true
+        options: [deploy, delete]
+
+permissions: {}
+
+concurrency:
+  group: aws-sample-deployment
+  cancel-in-progress: false
+
+jobs:
+  sample:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      RUNTIME_ROLE: ${{ vars.AWS_LAMBDA_ROLE_ARN }}
+      STACK: ai-review-bench
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Check the artifact before deploying
+        if: inputs.operation == 'deploy'
+        run: |
+          python3 aws/deploy.py package --output "$RUNNER_TEMP/report-stack.json"
+          python3 aws/deploy.py smoke --template "$RUNNER_TEMP/report-stack.json"
+      - name: Assume this repository's AWS role
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Deploy and verify one report
+        if: inputs.operation == 'deploy'
+        run: |
+          python3 aws/deploy.py deploy --stack "$STACK" --region "$AWS_REGION" --role-arn "$RUNTIME_ROLE"
+          python3 aws/deploy.py verify --stack "$STACK" --region "$AWS_REGION"
+      - name: Delete the sample deployment
+        if: inputs.operation == 'delete'
+        run: python3 aws/deploy.py delete --stack "$STACK" --region "$AWS_REGION"
